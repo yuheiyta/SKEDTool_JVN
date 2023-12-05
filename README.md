@@ -8,7 +8,8 @@ anacondaのインストールは[こちら](https://www.anaconda.com/download)
 conda_requirements.txt のヘッダーに書いてあるように、`$ conda create --name <env> --file conda_requirements.txt` で仮想環境を作ると必要なパッケージがインストールされる。  
 \<env> は環境名。例えばschedule。  
 環境を構築したら、 `$ conda activate <env>` で環境に入る。  
-本プログラムを実行するための適当なディレクトリを作成し、SKDTools.py, SKD.py, antenna.sch を置くと起動できる。  
+本プログラムを実行するための適当なディレクトリを作成し、SKDTools.py, SKED_GUITool.py, antenna.sch を置く。  
+作成したディレクトリ （もしくはpathを通すなどして） `python SKED_GUITool.py` で起動する。  
 antenna.sch はJVNのwebサイトなどから最新版を取得して使用すると良い。なお本ページのantenna.sch は、使用頻度が低いアンテナ情報をコメントアウトしてある。
 
 （以下は必要に応じて）  
