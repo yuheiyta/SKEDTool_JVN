@@ -1,5 +1,8 @@
 # Schedule
 .DRGファイルがGUI上で作成できる。
+SKDTools.py -- CUIで.DRGファイルを作成することができるモジュール
+SKED_GUITool.py -- GUIで.DRGファイルを作成することができるプログラム。SKDTools.pyのfunctionを使用している。
+
 ## Install (anaconda環境)
 anacondaで仮想環境を作り、そこで動かす方法（pythonやモジュールのバージョン等が散らからない（仮想環境で閉じる）のでおすすめ）  
 
