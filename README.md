@@ -1,6 +1,6 @@
 # Schedule
 .DRGファイルがGUI上で作成できる。
-## install (anaconda環境)
+## Install (anaconda環境)
 anacondaで仮想環境を作り、そこで動かす方法（pythonやモジュールのバージョン等が散らからない（仮想環境で閉じる）のでおすすめ）  
 
 anacondaのインストールは[こちら](https://www.anaconda.com/download)  
