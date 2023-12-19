@@ -215,7 +215,7 @@ class DRG:
                     sunaltaz,sunaz,sunel=trans_azel(get_sun(obstime),obstime,antenna.coord)
                     sunsep=altaz.separation(sunaltaz)
                     if(sunsep.deg<=sunseplim):
-                        msg.append("Warning: Sun separation = ","{:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
+                        msg.append("Warning: Sun separation = {:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
                         #print("Warning: separation = ","{:.3f}".format(sunsep.deg),"deg","#",i+1,sked.name,obstime,antenna.name)
                         #df_warn[j]=df_warn[j].append({'source':skdlist[i], 'time':obstime.datetime, 'antenna az':az,'antenna el':el,'sun az':sunaz,'sun el':sunel},ignore_index=True)
                     #df[j]=df[j].append({'source':skdlist[i], 'time':obstime.datetime, 'antenna az':az,'antenna el':el,'sun az':sunaz,'sun el':sunel},ignore_index=True)
@@ -240,7 +240,7 @@ class DRG:
                             sunaltaz,sunaz,sunel=trans_azel(get_sun(obstime),obstime,antenna.coord)
                             sunsep=altaz.separation(sunaltaz)
                             if(sunsep.deg<=sunseplim):
-                                msg.append("Warning: Sun separation = ","{:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
+                                msg.append("Warning: Sun separation = {:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
                                 #print("Warning: separation = ","{:.3f}".format(sunsep.deg),"deg","#",i+1,sked.name,obstime,antenna.name)
                                 #df_warn=df_warn.append({'source':skdlist[i], 'time':obstime.datetime, 'antenna az':az,'antenna el':el,'sun az':sunaz,'sun el':sunel},ignore_index=True)
     #                         df=df.append({'source':skdlist[i], 'time':obstime.datetime, 'antenna az':az,'antenna el':el,'sun az':sunaz,'sun el':sunel},ignore_index=True)
@@ -257,7 +257,7 @@ class DRG:
                             sunaltaz,sunaz,sunel=trans_azel(get_sun(obstime),obstime,antenna.coord)
                             sunsep=altaz.separation(sunaltaz)
                             if(sunsep.deg<=sunseplim):
-                                msg.append("Warning: Sun separation = ","{:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
+                                msg.append("Warning: Sun separation = {:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
                                 #print("Warning: separation = ","{:.3f}".format(sunsep.deg),"deg","#",i+1,sked.name,obstime,antenna.name)
                                 #df_warn=df_warn.append({'source':skdlist[i], 'time':obstime.datetime, 'antenna az':az,'antenna el':el,'sun az':sunaz,'sun el':sunel},ignore_index=True)
                         #df=df.append({'source':skdlist[i], 'time':obstime.datetime, 'antenna az':az,'antenna el':el,'sun az':sunaz,'sun el':sunel},ignore_index=True)
@@ -284,7 +284,7 @@ class DRG:
                         sunaltaz,sunaz,sunel=trans_azel(get_sun(obstime),obstime,antenna.coord)
                         sunsep=altaz.separation(sunaltaz)
                         if(sunsep.deg<=sunseplim):
-                            msg.append("Warning: Sun separation = ","{:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
+                            msg.append("Warning: Sun separation = {:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
                         azellist[j].append([obstime.datetime,az[j],el[j]])
                     obstime = obstime+dt_time
                     time2end=endtime-obstime
@@ -304,7 +304,7 @@ class DRG:
                         sunaltaz,sunaz,sunel=trans_azel(get_sun(obstime),obstime,antenna.coord)
                         sunsep=altaz.separation(sunaltaz)
                         if(sunsep.deg<=sunseplim):
-                            msg.append("Warning: Sun separation = ","{:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
+                            msg.append("Warning: Sun separation = {:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
                             #print("Warning: separation = ","{:.3f}".format(sunsep.deg),"deg","#",i+1,sked.name,obstime,antenna.name)
                             #df_warn=df_warn.append({'source':skdlist[i], 'time':obstime.datetime, 'antenna az':az,'antenna el':el,'sun az':sunaz,'sun el':sunel},ignore_index=True)
                         azellist[j].append([obstime.datetime,az[j],el[j]])
@@ -324,7 +324,7 @@ class DRG:
                     sunaltaz,sunaz,sunel=trans_azel(get_sun(obstime),obstime,antenna.coord)
                     sunsep=altaz.separation(sunaltaz)
                     if(sunsep.deg<=sunseplim):
-                        msg.append("Warning: Sun separation = ","{:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
+                        msg.append("Warning: Sun separation = {:.3f} deg, #{}, {}, {}, {}".format(sunsep.deg, i+1, sked.name, obstime,antenna.name))
                     azellist[j].append([obstime.datetime,az[j],el[j]])
             # Antenna slew part
             if(i<len(self.sked.skeds)-1):
@@ -340,7 +340,7 @@ class DRG:
                         sunaltaz,sunaz,sunel=trans_azel(get_sun(obstime),obstime,antenna.coord)
                         sunsep=altaz.separation(sunaltaz)
                         if(sunsep.deg<=sunseplim_slew):
-                            msg.append("Warning: Sun separation = ","{:.3f} deg, slew from #{} {} to #{} {}, {}, {}, {}, {}".format(sunsep.deg, i+1, self.sked.skeds[i].name, i+2, self.sked.skeds[i+1].name, obstime,antenna.name))
+                            msg.append("Warning: Sun separation = {:.3f} deg, slew from [#{} {}] to [#{} {}], {}, {}".format(sunsep.deg, i+1, self.sked.skeds[i].name, i+2, self.sked.skeds[i+1].name, obstime,antenna.name))
                         azellist[j].append([obstime.datetime,az[j],el[j]])
                     time2next=self.sked.skeds[i+1].start-obstime
                 nextobstime=obstime+time2next

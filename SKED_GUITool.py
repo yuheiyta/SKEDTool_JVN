@@ -466,12 +466,16 @@ def main(page: Page):
         page.update()
     
     def drg_check(e):
+        file_output_text.value="Processing..."
+        page.update()
         msg = drg.check()
         #print(msg)
         file_output_text.value= "\n".join(msg)
         page.update()
         
     def drg_deepcheck(e):
+        file_output_text.value="Processing..."
+        page.update()
         msg, fig = drg.azelplot()
         file_output_text.value= "\n".join(msg)
         mpl.figure=fig
