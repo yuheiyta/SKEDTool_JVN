@@ -5,6 +5,8 @@ SKED_GUITool.py -- GUIで.DRGファイルを作成することができるプロ
 
 ## Install (anaconda環境)
 anacondaで仮想環境を作り、そこで動かす方法（pythonやモジュールのバージョン等が散らからない（仮想環境で閉じる）のでおすすめ）  
+→ M1 Mac など architecture が異なると下の(3)でSolving environment: failed となってしまう。いくつか解決法はあるが、比較的簡単なのは module を都度インストールする方法（anaconda無しでもできる）。ただしpythonやmoduleのバージョンが合わない可能性があるので注意。おそらくpython 3.7以降であれば動く？（未確認）  
+必要なmoduleは、numpy, matplotlib, astropy, astroquery, flet (GUI用。普段使わないはずなのでinstall必須)。  
 
 (0) anacondaのインストールは[こちら](https://www.anaconda.com/download)  
 (1) 本ページに置いてあるファイルをダウンロードする。右上の Code → Download ZIP とすると良い。  
