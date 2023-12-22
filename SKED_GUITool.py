@@ -225,7 +225,7 @@ def main(page: Page):
         else:
             skd_name.value=""
         selected_src.sort()
-        print(selected_src)
+        #print(selected_src)
         page.update()
     
     @error_handler 
@@ -247,7 +247,7 @@ def main(page: Page):
         else:
             selected_skd.remove(e.control.cells[0].content.value)
         selected_skd.sort()
-        print(selected_skd)
+        #print(selected_skd)
         page.update()
 
     @error_handler
