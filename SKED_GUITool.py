@@ -17,7 +17,19 @@ matplotlib.use("Agg")
 def main(page: Page):
     global src_name_row,src_coord_row,src_frame_row,src_button_row,src_table,src_tab,selected_src,skd_table,skd_tab,selected_skd
 
+    def error_handler(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                bannertext.value = f"{e}"
+                page.banner.open = True
+                page.update()
+                return None  # エラーが発生した場合の戻り値を指定します
+        return wrapper
+
     # Pick files dialog
+    @error_handler
     def pick_file_result(e: ft.FilePickerResultEvent):
         if(e.files!=None):
             path = e.files[0].path
@@ -28,7 +40,8 @@ def main(page: Page):
             all_update(selected_index=0)
         else:
             print("Cancelled!")
-            
+
+    @error_handler        
     def pick_file_skd(e: ft.FilePickerResultEvent):
         if(e.files!=None):
             lsprev = subprocess.run(["ls", "-l"], stdout=subprocess.PIPE, text=True)
@@ -47,7 +60,8 @@ def main(page: Page):
         else:
             print("Cancelled!")
         page.update()
-            
+
+    @error_handler        
     def pick_file_xml(e: ft.FilePickerResultEvent):
         if(e.files!=None):
             lsprev = subprocess.run(["ls", "-l"], stdout=subprocess.PIPE, text=True)
@@ -71,6 +85,7 @@ def main(page: Page):
             print("Cancelled!")
         page.update()
 
+    @error_handler 
     def exp_update():
         exp_cont_code.value = drg.exper.obscode
         exp_cont_name.value = drg.exper.name
@@ -80,11 +95,13 @@ def main(page: Page):
         exp_cont_output.value = "\n".join(lines)
         save_file_dialog.file_name =drg.exper.obscode+".DRG"
         #save_file_path.value = drg.exper.obscode+".DRG"
-        
+
+    @error_handler        
     def sta_update():
         lines = drg.station.output()
         sta_cont_output.value = "\n".join(lines)
-        
+
+    @error_handler        
     def src_update():
         global src_table, src_tab, selected_src
         src_row = []
@@ -111,6 +128,7 @@ def main(page: Page):
         src_tab =ft.Tab(text="SOURCE",content=src_container)
         #print(src_table)
 
+    @error_handler 
     def skd_update():
         global skd_table, skd_tab,selected_skd
         selected_skd = []
@@ -148,6 +166,7 @@ def main(page: Page):
         skd_tab =ft.Tab(text="SKED",content=skd_container)
         #print(skd_table)
 
+    @error_handler 
     def file_timeshift(e):
         timed=0
         timetxt = file_input_timeshift.value.strip()
@@ -177,11 +196,13 @@ def main(page: Page):
             timetxt = inputt[1]     
         drg.shift(sign*timed)
         all_update(selected_index=0)
-        
+
+    @error_handler     
     def file_lstshift(e):
         drg.dayshift(file_input_lstshift.value)
         all_update(selected_index=0)
-        
+
+    @error_handler     
     def src_simbadquery(e):
         tab = SKEDTools.Query_Simbad(src_name1.value)
         if(tab is not None):
@@ -192,6 +213,7 @@ def main(page: Page):
         else:
             pass
 
+    @error_handler 
     def src_select(e):
         e.control.selected = not e.control.selected
         if(e.control.selected):
@@ -206,6 +228,7 @@ def main(page: Page):
         print(selected_src)
         page.update()
     
+    @error_handler 
     def sta_select(e):
         e.control.selected = not e.control.selected
         if(e.control.selected):
@@ -215,7 +238,8 @@ def main(page: Page):
         #print(selected_sta)
         selected_sta.sort()
         page.update()
-        
+
+    @error_handler     
     def skd_select(e):
         e.control.selected = not e.control.selected
         if(e.control.selected):
@@ -226,13 +250,15 @@ def main(page: Page):
         print(selected_skd)
         page.update()
 
+    @error_handler
     def sta_add(e):
         drg.station=SKEDTools.SKD_Station()
         if(selected_sta!=[]):
             drg.station.inputcodes(selected_sta)
         sta_update()
         page.update()
-        
+
+    @error_handler     
     def exp_add(e):
         if(exp_cont_code.value!=""):
             drg.exper.obscode = exp_cont_code.value
@@ -244,7 +270,8 @@ def main(page: Page):
             drg.exper.comment = exp_cont_comment.value
         exp_update()
         page.update()
-    
+
+    @error_handler    
     def src_add(e):
         name1 = src_name1.value
         if(src_frame.value !=""):
@@ -265,6 +292,7 @@ def main(page: Page):
         src_update()
         page_update(selected_index=3)
     
+    @error_handler 
     def skd_add(e):
         name=skd_name.value
         time = Time(skd_start.value)
@@ -275,7 +303,8 @@ def main(page: Page):
         drg.adjust()
         skd_update()
         page_update(selected_index=4)
-        
+
+    @error_handler         
     def skd_change(e):
         global selected_skd
         if(len(selected_skd)==0):
@@ -295,7 +324,8 @@ def main(page: Page):
             drg.adjust()
             skd_update()
             page_update(selected_index=4)
-    
+   
+    @error_handler 
     def src_clear(e):
         src_name1.value = ""
         src_name2.value = ""
@@ -304,21 +334,24 @@ def main(page: Page):
         src_frame.value = ""
         src_equinox.value = ""
         page.update()
-    
+
+    @error_handler    
     def skd_clear(e):
         skd_name.value = ""
         skd_start.value = ""
         skd_dur.value = ""
         skd_sta.value = ""
         page.update()
-        
+
+    @error_handler        
     def src_rem(e):
         global selected_src
         for i in reversed(selected_src):
             drg.source.delete(drg.source.sources[i-1])
         src_update()
         page_update(selected_index=3)
-    
+
+    @error_handler     
     def skd_rem(e):
         global selected_skd
         #print(drg.sked.skeds,len(drg.sked.skeds))
@@ -326,7 +359,8 @@ def main(page: Page):
             drg.sked.delete(drg.sked.skeds[i-1])
         skd_update()
         page_update(selected_index=4)
-        
+
+    @error_handler         
     def skd_edit(e):
         global selected_skd
         if(len(selected_skd)==0 or len(selected_skd)>1):
@@ -346,7 +380,8 @@ def main(page: Page):
             skd_dur.value = dur
             skd_sta.value = sta
             page.update()
-    
+
+    @error_handler     
     def skd_azel(e):
         def check_slewspeed(altaz_p,altaz_i,sked_antenna,timed):
             if(abs(sked_antenna.lim[0][1]-sked_antenna.lim[0][0])< 360.):
@@ -415,12 +450,24 @@ def main(page: Page):
         bs.open = False
         bs.update()
 
+    def close_banner(e):
+        page.banner.open = False
+        page.update()
 
+    bannertext = ft.Text("")
+    page.banner = ft.Banner(
+        bgcolor=ft.colors.AMBER_100,
+        leading=ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.AMBER, size=40),
+        content=bannertext,
+        actions=[ft.TextButton("Close", on_click=close_banner)])
+
+    @error_handler 
     def sourceplot(e):
         fig = drg.sourceplot()
         mpl.figure=fig
         page.update()
-        
+
+    @error_handler        
     def lst_elplot(e):
         srcnames=[]
         for i in selected_src:
@@ -430,7 +477,8 @@ def main(page: Page):
         mpl.figure=fig
         #fig.savefig("testfig.png")
         page.update()
-        
+
+    @error_handler           
     def ut_elplot(e):
         srcnames=[]
         for i in selected_src:
@@ -446,14 +494,16 @@ def main(page: Page):
         fig = drg.el_plot(srcnames=srcnames,timezone="jst")
         mpl.figure=fig
         page.update()   
-        
+
+    @error_handler         
     def all_update(selected_index=1):
         exp_update()
         sta_update()
         src_update()
         skd_update()
         page_update(selected_index)
-    
+
+    @error_handler    
     def page_update(selected_index=1):
         global selected_src, selected_skd
         selected_src=[]
@@ -464,7 +514,8 @@ def main(page: Page):
         t = ft.Tabs(selected_index=selected_index,animation_duration=300,tabs=tabs,expand=1)
         page.add(t)
         page.update()
-    
+
+    @error_handler    
     def drg_check(e):
         file_output_text.value="Processing..."
         page.update()
@@ -472,7 +523,8 @@ def main(page: Page):
         #print(msg)
         file_output_text.value= "\n".join(msg)
         page.update()
-        
+
+    @error_handler     
     def drg_deepcheck(e):
         file_output_text.value="Processing..."
         page.update()
@@ -506,6 +558,7 @@ def main(page: Page):
     page.overlay.append(bs)
 
     # Save file dialog
+    @error_handler 
     def save_file_result(e: ft.FilePickerResultEvent):
         if(e.path!=None):
             path = e.path
@@ -541,7 +594,6 @@ def main(page: Page):
     file_output_text = ft.Text("    ", font_family=outputfont, color=ft.colors.BLACK, selectable=True)
     file_output_check = ft.Column([file_output_text],height=70,scroll=ft.ScrollMode.ALWAYS)
     file_cont_output_check = ft.Container(file_output_check, bgcolor=ft.colors.WHITE, padding=10, border=ft.border.all(1), alignment=ft.alignment.top_left)
-    
     
     file_txt_lstshift = ft.Text("Day shift with the same LST")
     file_input_lstshift = ft.TextField(label = "Day Delta", hint_text="ex) 1",helper_text="Unitless value\n")

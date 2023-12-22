@@ -138,7 +138,7 @@ class DRG:
                     msg.append("antenna elevation limit, el ={}, {}, {}, {}".format(altaz_i.alt.deg, sked.source.name, sked.start, sked_antenna.name))
                     numerror+=1
                 if(altaz_e.alt.deg < float(sked_antenna.lim[1][0]) or float(sked_antenna.lim[1][1]) < altaz_e.alt.deg):
-                    msg.append("antenna elevation limit, el ={}, {}, {}, {}".format(altaz_i.alt.deg, sked.source.name, sked.start+dur, sked_antenna.name))
+                    msg.append("antenna elevation limit, el ={}, {}, {}, {}".format(altaz_i.alt.deg, sked.source.name, sked.start+sked.dur, sked_antenna.name))
                     numerror+=1
                 if(abs(sked_antenna.lim[0][1]-sked_antenna.lim[0][0])< 360.):
                     if(altaz_i.az.deg < float(sked_antenna.lim[0][0]) or float(sked_antenna.lim[0][1]) < altaz_i.az.deg):
@@ -146,7 +146,7 @@ class DRG:
                         #print("antenna azimuth limit, az = ",altaz_i.az.deg, sked_source.name, sked.start, sked_antenna.name)
                         numerror+=1
                     if(altaz_e.az.deg < float(sked_antenna.lim[0][0]) or float(sked_antenna.lim[0][1]) < altaz_e.az.deg):
-                        msg.append("antenna azimuth limit, az = {}, {}, {}, {}".format(altaz_i.az.deg, sked.source.name, sked.start+dur, sked_antenna.name))
+                        msg.append("antenna azimuth limit, az = {}, {}, {}, {}".format(altaz_i.az.deg, sked.source.name, sked.start+sked.dur, sked_antenna.name))
                         #print("antenna azimuth limit, az = ",altaz_i.az.deg, sked_source.name, sked.start+dur, sked_antenna.name)
                         numerror+=1
                 antprev_tmp.append(altaz_e)
@@ -834,20 +834,20 @@ def Read_antennasch(filename):
 
 antennasrc = Read_antennasch("antenna.sch")
 
-def Read_station(readlines):
-    args=[]
-    for line in readlines:
-        lines=line.split()
-        if(lines[0][0]=="$"):
-            obscode=lines[1]
-        elif("P.I." in lines[0]):
-            name = lines[1]
-        elif("Correlator" in lines[0]):
-            correlator = lines[1]
-        elif(len(lines[0])!=1):
-            args.append(line)
+def Read_station(filename):
+    # args=[]
+    # for line in readlines:
+    #     lines=line.split()
+    #     if(lines[0][0]=="$"):
+    #         obscode=lines[1]
+    #     elif("P.I." in lines[0]):
+    #         name = lines[1]
+    #     elif("Correlator" in lines[0]):
+    #         correlator = lines[1]
+    #     elif(len(lines[0])!=1):
+    #         args.append(line)
+    # header=True
     antennas = []
-    header=True
     with open(filename,"r") as f:
         lines = f.readlines()
         for line in lines:
