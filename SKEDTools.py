@@ -3,33 +3,11 @@ from astropy.coordinates import get_sun
 import astropy.units as u
 import numpy as np
 from astropy.time import Time, TimeDelta
-import sys
-import datetime
-import matplotlib.pyplot as plt
-from matplotlib import dates as mdates
-from astroquery.simbad import Simbad
-
-plt.rcParams['font.size'] = 14
-plt.rcParams['xtick.direction'] = 'in'
-plt.rcParams['ytick.direction'] = 'in'
-
-class DRG:
-    def __init__(self, exper=None, source=None, sked=None, station=None):
-        self.exper = exper
-        self.source = source
-        self.sked = sked
-        self.station = station
-        from astropy.coordinates import SkyCoord, ICRS, Galactic, FK4, FK5, EarthLocation, AltAz
-from astropy.coordinates import get_sun
-import astropy.units as u
-import numpy as np
-from astropy.time import Time, TimeDelta
-import sys
-import datetime
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import dates as mdates
 from astroquery.simbad import Simbad
+import pickle
 
 plt.rcParams['font.size'] = 12
 plt.rcParams['xtick.direction'] = 'in'
@@ -862,8 +840,40 @@ def Query_Simbad(name):
     result_table = Simbad.query_object(name)
     return result_table
 
-
-
+catalog_npy = None
+c_catalog = None
+def Query_VLBAcalib(c_target, f_th = 0.1, sep_th = 2.):
+    global catalog_npy, c_catalog
+    def search(f_th, sep_th):
+        global tab_c, sep_c
+        d2d = c_target.separation(c_catalog)
+        c_indices = np.where(d2d < sep_th*u.deg)[0]
+        sep_c = np.sort(d2d[c_indices].to_string(unit=u.deg, decimal=True, precision=2))
+        c_indices = c_indices[np.argsort(d2d[c_indices])]
+        #print(c_indices)
+        if(len(c_indices)==0):
+            return c_indices
+        else:
+            tab_c = catalog_npy[c_indices]
+            tab_c[:,8:17][tab_c[:,8:17] == '--']='nan'
+            mask = np.char.startswith(tab_c[:,8:17], '<')
+            tab_c[:,8:17][mask] = 'nan'
+            tab_f_search = tab_c[:,8:17].astype(float)
+            f_indices = np.where((tab_f_search > f_th).any(axis=1))[0]
+            return f_indices
+    if(catalog_npy is None):
+        f = open('vlbacoord.pickle','rb')
+        c_catalog = pickle.load(f)
+        catalog_npy = np.load("vlbacalib_allfreq_full2023a_thresh.npy")
+    indices = []
+    #print(indices)
+    while(len(indices)==0):
+        msg="Search: < {:.1f} deg & > {} mJy".format(sep_th,int(f_th*1000.))
+        indices = search(f_th=f_th, sep_th=sep_th)
+        sep_th = sep_th*1.5
+        f_th = f_th*3./4.
+    return msg, np.insert(tab_c[indices], 0, sep_c[indices], axis=1)
+    
 ##############
 # For ELplot func.
 def trans_azel(coordinate,obstime,loc):

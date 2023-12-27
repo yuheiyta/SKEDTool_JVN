@@ -123,7 +123,7 @@ def main(page: Page):
         lines = drg.source.output()
         src_cont_output.value = "\n".join(lines)
         src_table = ft.Column([src_table],height=200,scroll=ft.ScrollMode.ALWAYS)
-        src_col = ft.Column([txt_space,inputtxt,src_name_row,src_coord_row,src_frame_row,src_button_row,src_table,src_cont_remove,src_button_plot_row,outputtxt, src_cont_output_cont],scroll=ft.ScrollMode.ALWAYS)
+        src_col = ft.Column([txt_space,inputtxt,src_name_row,src_coord_row,src_frame_row,src_button_row,src_table,src_button_select_row,src_button_plot_row,outputtxt, src_cont_output_cont],scroll=ft.ScrollMode.ALWAYS)
         src_container = ft.Container(src_col, alignment=ft.alignment.top_center)
         src_tab =ft.Tab(text="SOURCE",content=src_container)
         #print(src_table)
@@ -532,7 +532,84 @@ def main(page: Page):
         file_output_text.value= "\n".join(msg)
         mpl.figure=fig
         page.update()
-    
+
+    @error_handler    
+    def vlba_search(e):
+        def calib_select(e):
+            e.control.selected = not e.control.selected
+            if(e.control.selected):
+                selected_calib = e.control.cells[0].content.value-1
+            else:
+                selected_calib = None
+            calib_value(selected_calib)
+        def calib_value(selected_calib):
+            if(selected_calib is not None):
+                src_name1.value = cands[selected_calib][2]
+                src_ra.value = cands[selected_calib][5]
+                src_dec.value = cands[selected_calib][6]
+            else:
+                src_name1.value = ""
+                src_name2.value = ""
+                src_ra.value = ""
+                src_dec.value = ""
+                src_frame.value = ""
+                src_equinox.value = ""
+            page.update()
+        def close_dlg(e):
+            dlg.open = False
+            page.update()
+        #print(drg.source.sources, selected_src)
+        msg, cands = SKEDTools.Query_VLBAcalib(drg.source.sources[selected_src[0]-1].coord)
+        cands_row = []
+        for i,cand in enumerate(cands):
+            #print(cand[0])
+            if(i==0):
+                selected_calib=True
+                calib_value(0)
+            else:
+                selected_calib=False
+            cands_row.append(ft.DataRow([ft.DataCell(ft.Text(i+1)),
+                                        ft.DataCell(ft.Text(cand[0])),
+                                        ft.DataCell(ft.Text(cand[2])),
+                                        ft.DataCell(ft.Text(cand[7])),
+                                        ft.DataCell(ft.Text(cand[8])),
+                                        ft.DataCell(ft.Text(cand[9])),
+                                        ft.DataCell(ft.Text(cand[10])),
+                                        ft.DataCell(ft.Text(cand[11])),
+                                        ft.DataCell(ft.Text(cand[12])),
+                                        ft.DataCell(ft.Text(cand[15])),
+                                        ft.DataCell(ft.Text(cand[16])),
+                                        ft.DataCell(ft.Text(cand[20]))],
+                                        selected=selected_calib,
+                                        on_select_changed=calib_select))
+                                        
+            cands_table = ft.DataTable(show_checkbox_column=True, 
+                                        columns=[ft.DataColumn(ft.Text("ID")),
+                                                 ft.DataColumn(ft.Text("Sep [deg]")),
+                                                 ft.DataColumn(ft.Text("Name1")),
+                                                 ft.DataColumn(ft.Text("F_Ss")),
+                                                 ft.DataColumn(ft.Text("F_Sl")),
+                                                 ft.DataColumn(ft.Text("F_Cs")),
+                                                 ft.DataColumn(ft.Text("F_Cl")),
+                                                 ft.DataColumn(ft.Text("F_Xs")),
+                                                 ft.DataColumn(ft.Text("F_Xl")),
+                                                 ft.DataColumn(ft.Text("F_Ks")),
+                                                 ft.DataColumn(ft.Text("F_Kl")),
+                                                 ft.DataColumn(ft.Text("Catalog"))],
+                                                 #multi_select=False,
+                                                 rows=cands_row,)
+        cands_table = ft.Column([cands_table],height=250,scroll=ft.ScrollMode.ALWAYS)
+        dlgtxt = ft.Text(msg)
+        dlgcont = ft.Column([dlgtxt,cands_table])
+        dlg = ft.AlertDialog(content = dlgcont, actions=[
+            ft.TextButton("Close", on_click=close_dlg)
+        ],)
+        page.dialog = dlg
+        dlg.open = True
+        page.update()
+
+
+
     page.title = "SKED Tool"  # アプリタイトル
     
     exper=SKEDTools.SKD_Exper("")
@@ -688,7 +765,9 @@ def main(page: Page):
     
     #src_table = ft.DataTable()
     src_table = ft.Column([ft.DataTable()],scroll=ft.ScrollMode.ALWAYS) #height is defined in src_update()
-    src_cont_remove = ft.ElevatedButton(text="Remove",on_click=src_rem)
+    src_remove = ft.ElevatedButton(text="Remove",on_click=src_rem)
+    src_vlba = ft.ElevatedButton(text="VLBA Calibrator Search",on_click=vlba_search)
+    src_button_select_row = ft.Row([src_remove, src_vlba]) 
     src_lst_el = ft.ElevatedButton(text="LST-EL Plot",on_click=lst_elplot)
     src_ut_el = ft.ElevatedButton(text="UT-EL Plot",on_click=ut_elplot)
     src_jst_el = ft.ElevatedButton(text="JST-EL Plot",on_click=jst_elplot)
@@ -698,7 +777,7 @@ def main(page: Page):
     
     src_cont_output = ft.Text("$SOURCES\n*", font_family=outputfont, color=ft.colors.BLACK, selectable=True)
     src_cont_output_cont = ft.Container(src_cont_output, bgcolor=ft.colors.WHITE, padding=10, border=ft.border.all(1), alignment=ft.alignment.top_left)
-    src_col = ft.Column([txt_space,inputtxt,src_name_row,src_coord_row,src_frame_row,src_button_row,src_table,src_cont_remove,src_button_plot_row,outputtxt, src_cont_output_cont], scroll=ft.ScrollMode.ALWAYS)
+    src_col = ft.Column([txt_space,inputtxt,src_name_row,src_coord_row,src_frame_row,src_button_row,src_table,src_button_select_row,src_button_plot_row,outputtxt, src_cont_output_cont], scroll=ft.ScrollMode.ALWAYS)
     src_container = ft.Container(src_col, alignment=ft.alignment.top_center)
     src_tab =ft.Tab(text="SOURCE",content=src_container)
     
