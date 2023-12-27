@@ -585,20 +585,24 @@ def main(page: Page):
                                         
             cands_table = ft.DataTable(show_checkbox_column=True, 
                                         columns=[ft.DataColumn(ft.Text("ID")),
-                                                 ft.DataColumn(ft.Text("Sep [deg]")),
+                                                 ft.DataColumn(ft.Text("Separation"),tooltip="Unit: degree",),
                                                  ft.DataColumn(ft.Text("Name1")),
-                                                 ft.DataColumn(ft.Text("F_Ss")),
-                                                 ft.DataColumn(ft.Text("F_Sl")),
-                                                 ft.DataColumn(ft.Text("F_Cs")),
-                                                 ft.DataColumn(ft.Text("F_Cl")),
-                                                 ft.DataColumn(ft.Text("F_Xs")),
-                                                 ft.DataColumn(ft.Text("F_Xl")),
-                                                 ft.DataColumn(ft.Text("F_Ks")),
-                                                 ft.DataColumn(ft.Text("F_Kl")),
-                                                 ft.DataColumn(ft.Text("Catalog"))],
+                                                 ft.DataColumn(ft.Text("F_Ss"),tooltip="Flux density at S-band (2.2 GHz), Short baseline (400 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("F_Sl"),tooltip="Flux density at S-band (2.2 GHz), Long baseline (5000 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("F_Cs"),tooltip="Flux density at C-band (4.8 GHz), Short baseline (400 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("F_Cl"),tooltip="Flux density at C-band (4.8 GHz), Long baseline (5000 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("F_Xs"),tooltip="Flux density at X-band (8.6 GHz), Short baseline (400 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("F_Xl"),tooltip="Flux density at X-band (8.6 GHz), Long baseline (5000 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("F_Ks"),tooltip="Flux density at K-band (23 GHz), Short baseline (400 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("F_Kl"),tooltip="Flux density at K-band (23 GHz), Long baseline (5000 km), Unit: Jy"),
+                                                 ft.DataColumn(ft.Text("Ref"),tooltip="Position reference")],
                                                  #multi_select=False,
-                                                 rows=cands_row,)
-        cands_table = ft.Column([cands_table],height=250,scroll=ft.ScrollMode.ALWAYS)
+                                                 rows=cands_row,
+                                                 column_spacing=15,
+                                                 data_text_style = ft.TextStyle(size=13,color=ft.colors.BLACK),
+                                                 heading_text_style = ft.TextStyle(size=13,color=ft.colors.BLACK))
+
+        cands_table = ft.Column([cands_table],height=250,width='90%',scroll=ft.ScrollMode.ALWAYS)
         dlgtxt = ft.Text(msg)
         dlgcont = ft.Column([dlgtxt,cands_table])
         dlg = ft.AlertDialog(content = dlgcont, actions=[
