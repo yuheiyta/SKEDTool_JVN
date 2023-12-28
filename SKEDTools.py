@@ -48,25 +48,31 @@ class DRG:
         self.station = Read_stations(lines)
         self.adjust()
 
-    def output(self, filename=""):
-        try:
-            lines = self.exper.output()
-            for line in lines:
-                print(line)
-            print("$PARAM\nSYNCHRONIZE OFF")
-            lines = self.source.output()
-            for line in lines:
-                print(line)
-            lines = self.station.output()
-            for line in lines:
-                print(line)  
-            lines = self.sked.output()
-            for line in lines:
-                print(line) 
-            print("$HEAD\n*")
-            print("$CODES\n*")
-        except Exception as e:
-            print(e)
+    def output(self):
+        alllines = []
+        lines = self.exper.output()
+        for line in lines:
+        #    print(line)
+            alllines.append(line)
+        #print("$PARAM\nSYNCHRONIZE OFF")
+        alllines.append("$PARAM\nSYNCHRONIZE OFF")
+        lines = self.source.output()
+        for line in lines:
+            alllines.append(line)
+        #    print(line)
+        lines = self.station.output()
+        for line in lines:
+            alllines.append(line)
+        #    print(line)  
+        lines = self.sked.output()
+        for line in lines:
+            alllines.append(line)
+        #    print(line) 
+        #print("$HEAD\n*")
+        alllines.append("$HEAD\n*")
+        #print("$CODES\n*")
+        alllines.append("$CODES\n*")
+        return "\n".join(alllines)
         
     def write(self, filename=""):
         if(type(filename) is str):
@@ -687,7 +693,7 @@ def Read_drg(lines,section,readcomment=False):
     readmode=False
     section="$"+section
     for line in lines:
-        line=line.strip()
+        line=line.rstrip()
         if(readmode):
             if(line[0]=="$"):
                 readmode=False
@@ -790,9 +796,9 @@ def Read_experline(readlines):
         if(lines[0][0]=="$"):
             obscode=lines[1]
         elif("P.I." in lines[0]):
-            name = lines[1]
+            name = line[7:]
         elif("Correlator" in lines[0]):
-            correlator = lines[1]
+            correlator = line[13:]
         elif(len(lines[0])!=1):
             args.append(line)
     return SKD_Exper(obscode,name,correlator,*args)
