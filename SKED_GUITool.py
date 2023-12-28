@@ -534,6 +534,14 @@ def main(page: Page):
         page.update()
 
     @error_handler    
+    def copy_clip(e):
+       exp_txt.value=""
+       lines = drg.output()
+       page.set_clipboard(lines)
+       exp_txt.value="Copied!"
+
+
+    @error_handler    
     def vlba_search(e):
         def calib_select(e):
             e.control.selected = not e.control.selected
@@ -561,7 +569,7 @@ def main(page: Page):
         #print(drg.source.sources, selected_src)
         msg, cands = SKEDTools.Query_VLBAcalib(drg.source.sources[selected_src[0]-1].coord)
         cands_row = []
-        for i,cand in enumerate(cands):
+        for i,cand in enumerate(cands): 
             #print(cand[0])
             if(i==0):
                 selected_calib=True
@@ -645,9 +653,9 @@ def main(page: Page):
             path = e.path
             #path = e.files[0].path
             #print(path)
-            save_file_path.value = "Saved at "+str(path)
+            exp_txt.value = "Saved at "+str(path)
             drg.write(path)
-            save_file_path.update()
+            exp_txt.update()
             #selected_file.value = obscode
             #selected_file.update()
             #all_update(selected_index=0)
@@ -655,7 +663,7 @@ def main(page: Page):
             print("Cancelled!")
 
     save_file_dialog = ft.FilePicker(on_result=save_file_result)
-    save_file_path = ft.Text()
+    exp_txt = ft.Text()
 
     
     page.overlay.extend([import_file_dialog, save_file_dialog,make_skd_dialog,make_xml_dialog])
@@ -663,8 +671,9 @@ def main(page: Page):
     file_txt = ft.Text("File Manager")
     file_imp = ft.ElevatedButton(text="Import",icon=ft.icons.UPLOAD_FILE,on_click=lambda _: import_file_dialog.pick_files())
     file_imp_row = ft.Row([file_imp,selected_file])
-    file_exp = ft.ElevatedButton(text="Export",icon=ft.icons.SAVE,on_click=lambda _: save_file_dialog.save_file(),disabled=page.web)
-    file_exp_row = ft.Row([file_exp,save_file_path])
+    file_exp = ft.ElevatedButton(text="Export",icon=ft.icons.SAVE,on_click=lambda _: save_file_dialog.save_file())
+    file_clip = ft.ElevatedButton(text="Copy Clipboard",on_click=copy_clip)
+    file_exp_row = ft.Row([file_exp,file_clip,exp_txt])
     
     txt_space = ft.Text("",size=3)
     
