@@ -499,7 +499,8 @@ class Source:
         name2 = self.name2
         ra = self.coord.icrs.ra.hms
         dec = self.coord.icrs.dec.dms
-        return "{:<.8s} {:<.8s} {:02d} {:02d} {:08.5f} {:+03d} {:02d} {:07.4f} 2000.0  0  0  0  0".format(name1, name2,int(ra[0]),int(ra[1]),ra[2],int(dec[0]),int(abs(dec[1])),abs(dec[2]))
+        dec_sign = "-" if source.coord.icrs.dec.deg < 0 else "+"
+        return "{:<.8s} {:<.8s} {:02d} {:02d} {:08.5f} {}{:02d} {:02d} {:07.4f} 2000.0  0  0  0  0".format(name1, name2,int(ra[0]),int(ra[1]),ra[2],dec_sign, int(abs(dec[0])),int(abs(dec[1])),abs(dec[2]))
 
 class SKD_Source:
     def __init__(self):
@@ -511,7 +512,8 @@ class SKD_Source:
             name2 = source.name2
             ra = source.coord.icrs.ra.hms
             dec = source.coord.icrs.dec.dms
-            lines+="{:<8.8s} {:<8.8s} {:02d} {:02d} {:08.5f} {:+03d} {:02d} {:07.4f} 2000.0  0  0  0  0\n".format(name1, name2,int(ra[0]),int(ra[1]),ra[2],int(dec[0]),int(abs(dec[1])),abs(dec[2]))
+            dec_sign = "-" if source.coord.icrs.dec.deg < 0 else "+"
+            lines+="{:<8.8s} {:<8.8s} {:02d} {:02d} {:08.5f} {}{:02d} {:02d} {:07.4f} 2000.0  0  0  0  0\n".format(name1, name2,int(ra[0]),int(ra[1]),ra[2],dec_sign, int(abs(dec[0])),int(abs(dec[1])),abs(dec[2]))
         return lines
     def add(self, source):
         self.sources.append(source)
@@ -525,7 +527,10 @@ class SKD_Source:
             name2 = source.name2
             ra = source.coord.icrs.ra.hms
             dec = source.coord.icrs.dec.dms
-            outline = "{:<8.8s} {:<8.8s} {:02d} {:02d} {:08.5f} {:+03d} {:02d} {:07.4f} 2000.0  0  0  0  0".format(name1, name2,int(ra[0]),int(ra[1]),ra[2],int(dec[0]),int(abs(dec[1])),abs(dec[2]))
+            dec_sign = "-" if source.coord.icrs.dec.deg < 0 else "+"
+            outline = "{:<8.8s} {:<8.8s} {:02d} {:02d} {:08.5f} {}{:02d} {:02d} {:07.4f} 2000.0  0  0  0  0".format(name1, name2,int(ra[0]),int(ra[1]),ra[2], dec_sign, int(abs(dec[0])),int(abs(dec[1])),abs(dec[2]))
+            #print(dec)
+            #print("{:<.8s} {:<.8s} {:02d} {:02d} {:08.5f} {}{:02d} {:02d} {:07.4f} 2000.0  0  0  0  0".format(name1, name2,int(ra[0]),int(ra[1]),ra[2],dec_sign, int(abs(dec[0])),int(abs(dec[1])),abs(dec[2])))
             #outline = "{:-8s} {:-8s} {:2d} {:2d} {:07.5f} {:+2d} {:2d} {:06.4f} 2000.0  0  0  0  0".format(name1, name2,ra[0],ra[1],ra[2],ra[0],ra[1],ra[2])
             lines.append(outline)
         lines.append("*")
